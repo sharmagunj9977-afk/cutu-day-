@@ -1,0 +1,169 @@
+<!-- Boyfriend's Day Webpage (Personalized)
+     Save this file as boyfriends_day_page.html and open in a browser.
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Boyfriend's Day 💖</title>
+  <style>
+    :root{
+      --bg:#FFF7FB;
+      --card:#ffffff;
+      --accent:#ff6b9a;
+      --muted:#6b6b6b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(180deg,var(--bg),#fff);padding:24px}
+    .wrap{width:100%;max-width:760px;background:var(--card);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,0.08);padding:32px;position:relative;overflow:hidden}
+    header{display:flex;align-items:center;gap:16px}
+    .badge{width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,#ffd1e6,#ffd9f0);display:flex;align-items:center;justify-content:center;font-size:34px}
+    h1{margin:0;font-size:26px}
+    p.lead{margin:10px 0 18px;color:var(--muted)}
+
+    .message{background:linear-gradient(180deg,#fff, #fff);border-radius:12px;padding:18px;border:1px dashed rgba(0,0,0,0.04)}
+    .message p{margin:8px 0;font-size:16px}
+
+    .heart-row{display:flex;align-items:center;gap:14px;margin-top:14px}
+    .heart-btn{background:transparent;border:none;cursor:pointer;outline:none;font-size:18px;padding:12px;border-radius:10px;display:flex;align-items:center;gap:8px}
+
+    .heart{width:72px;height:72px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,#fff0f4,#ffeef7);box-shadow:0 8px 24px rgba(255,107,154,0.14);transition:transform .18s}
+    .heart svg{width:44px;height:44px;transform-origin:center center}
+
+    .heart.burst{animation:pop .36s ease-out}
+    @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.14)}100%{transform:scale(1)} }
+
+    .secret{margin-top:14px;padding:12px;border-radius:10px;background:linear-gradient(90deg,#fff,#fff7fb);display:none}
+    .secret.show{display:block}
+
+    .confetti-canvas{position:absolute;inset:0;pointer-events:none}
+
+    .cta{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+    .btn-pink{background:var(--accent);color:white}
+    .btn-soft{background:#fff;border:1px solid rgba(0,0,0,0.06)}
+
+    footer{margin-top:18px;font-size:13px;color:var(--muted)}
+
+    .sparkle{position:absolute;right:18px;top:18px;font-size:12px;color:var(--accent);opacity:.9}
+
+    @media (max-width:520px){.badge{width:56px;height:56px;font-size:28px}.heart{width:58px;height:58px}.wrap{padding:20px}}
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <canvas class="confetti-canvas" id="confetti"></canvas>
+    <div class="sparkle">✨ surprise ✨</div>
+
+    <header>
+      <div class="badge">💌</div>
+      <div>
+        <h1>Happy Boyfriend's Day, my cutu batman ✨</h1>
+        <p class="lead">A tiny interactive love-note — scan, tap, smile. 💖</p>
+      </div>
+    </header>
+
+    <section class="message">
+      <p>Hey <strong>my cutu batman</strong>,</p>
+      <p>You drive me crazy in the best way possible. The way you look at me makes my heart race, and the way you tease me makes me laugh even when I don’t want to. Honestly, I think I might be addicted to you. ❤️</p>
+
+      <div class="heart-row">
+        <div class="heart" id="heart">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 20s-7.5-4.35-10-7.2C-1.6 8.6 3 3 7.5 6.9 9.2 8.2 11 9.8 12 11c1-1.2 2.8-2.8 4.5-4.1C21 3 26.6 8.6 22 12.8 19.5 15.65 12 20 12 20z" fill="url(#g)"/>
+            <defs>
+              <linearGradient id="g" x1="0" x2="1">
+                <stop offset="0" stop-color="#ff9db8"/>
+                <stop offset="1" stop-color="#ff6b9a"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <button class="btn btn-pink heart-btn" id="tapBtn">Tap for surprise</button>
+
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:12px;color:var(--muted)">Redeemable in-person:</div>
+          <div style="font-weight:700">1 tight hug • 10 forehead kisses • endless cuddles</div>
+        </div>
+      </div>
+
+      <div class="secret" id="secret">
+        <p><strong>Secret message:</strong> Yaaayy!! you redeemed a free voucher of unlimited kisses, hugs, cuddles and love. Validation: a lifetime with me 💖</p>
+      </div>
+
+      <div class="cta">
+        <button class="btn btn-pink" id="loveMeter">Show how much</button>
+        <button class="btn btn-soft" id="downloadNote">Save this note</button>
+      </div>
+
+      <footer>
+        <div>Tip: Host this file online (GitHub Pages / Netlify) and create a QR code that points to the link. Put it on a card for an extra cute moment. 😌</div>
+      </footer>
+    </section>
+  </div>
+
+  <script>
+    const heart = document.getElementById('heart');
+    const tapBtn = document.getElementById('tapBtn');
+    const secret = document.getElementById('secret');
+    const confCanvas = document.getElementById('confetti');
+    const ctx = confCanvas.getContext('2d');
+
+    function resizeCanvas(){confCanvas.width = confCanvas.clientWidth; confCanvas.height = confCanvas.clientHeight}
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+    const confetti = [];
+    function spawnConfetti(x, y, n=30){
+      for(let i=0;i<n;i++){
+        confetti.push({x,y,vy:(Math.random()*-6)-2,vx:(Math.random()*10)-5,rot:Math.random()*360,size:6+Math.random()*10,ttl:60+Math.random()*40,color:`hsl(${320+Math.random()*40},80%,60%)`});
+      }
+    }
+    function step(){
+      ctx.clearRect(0,0,confCanvas.width,confCanvas.height);
+      for(let i=confetti.length-1;i>=0;i--){
+        let p = confetti[i];
+        p.vy += 0.3; p.x += p.vx; p.y += p.vy; p.rot += p.vx*2; p.ttl--;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+        ctx.fillStyle = p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size);
+        ctx.restore();
+        if(p.ttl<=0 || p.y>confCanvas.height+50) confetti.splice(i,1);
+      }
+      requestAnimationFrame(step);
+    }
+    step();
+
+    function popLove(){
+      heart.classList.add('burst');
+      setTimeout(()=>heart.classList.remove('burst'),380);
+      const r = heart.getBoundingClientRect();
+      const cx = r.left + r.width/2 - confCanvas.getBoundingClientRect().left;
+      const cy = r.top + r.height/2 - confCanvas.getBoundingClientRect().top;
+      spawnConfetti(cx,cy,36);
+      heart.animate([{transform:'scale(1)'},{transform:'scale(1.06)'},{transform:'scale(1)'}],{duration:420,easing:'cubic-bezier(.2,.8,.2,1)'}); 
+    }
+
+    tapBtn.addEventListener('click',()=>{popLove(); secret.classList.add('show'); playTone();});
+    heart.addEventListener('click',()=>{popLove(); secret.classList.toggle('show'); playTone();});
+
+    function playTone(){try{const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator();const g=a.createGain();o.type='sine';o.frequency.value=520;g.gain.value=0.0015; o.connect(g);g.connect(a.destination);o.start();g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+0.35); o.stop(a.currentTime+0.36);}catch(e){}}
+
+    document.getElementById('loveMeter').addEventListener('click',()=>{
+      const now = new Date();
+      const score = (now.getDate()*7 + now.getMonth()+1 + Math.floor(Math.random()*13)).toString();
+      alert('How much I love you? ' + score + '/100 (and then some ✨)');
+      popLove();
+    });
+
+    document.getElementById('downloadNote').addEventListener('click',()=>{
+      const text = `For my cutu batman:\n\nThis page is my little gift to you on Boyfriend's Day. Keep it forever. ❤️`;
+      const blob = new Blob([text],{type:'text/plain'});
+      const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='boyfriends_day_note.txt'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    window.addEventListener('keydown',(e)=>{if(e.key.toLowerCase()==='h'){secret.classList.toggle('show');popLove();}});
+  </script>
+</body>
+</html>
